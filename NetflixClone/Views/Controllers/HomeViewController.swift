@@ -10,8 +10,8 @@ import UIKit
 class HomeViewController: UIViewController {
 
     private let homeFeedTable: UITableView = {
-        let tv = UITableView()
-        tv.register(UITableViewCell.self, forCellReuseIdentifier: "cell")
+        let tv = UITableView(frame: .zero, style: .grouped)
+        tv.register(CollectionViewTableViewCell.self, forCellReuseIdentifier: CollectionViewTableViewCell.id)
         return tv
     }()
     
@@ -27,6 +27,9 @@ class HomeViewController: UIViewController {
     private func delegations() {
         homeFeedTable.delegate = self
         homeFeedTable.dataSource = self
+        
+        let header = HomeHeaderUIView(frame: CGRect(x: 0, y: 0, width: view.bounds.width, height: 450))
+        homeFeedTable.tableHeaderView = header
     }
     
     override func viewDidLayoutSubviews() {
@@ -36,13 +39,18 @@ class HomeViewController: UIViewController {
 }
 
 extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
+    
+    func numberOfSections(in tableView: UITableView) -> Int {
+        return 20
+    }
+    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 10
+        return 1
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
-        cell.textLabel?.text = "deneme"
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: CollectionViewTableViewCell.id, for: indexPath) as? CollectionViewTableViewCell else { return UITableViewCell()}
+        
         return cell
     }
     

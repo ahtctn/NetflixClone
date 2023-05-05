@@ -16,6 +16,8 @@
 		7B4114C02A05659B00741DD5 /* UpcomingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B4114BF2A05659B00741DD5 /* UpcomingViewController.swift */; };
 		7B4114C22A0565AA00741DD5 /* SearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B4114C12A0565AA00741DD5 /* SearchViewController.swift */; };
 		7B4114C42A0565B000741DD5 /* DownloadsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B4114C32A0565B000741DD5 /* DownloadsViewController.swift */; };
+		7B4114CC2A05725200741DD5 /* CollectionViewTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B4114CB2A05725200741DD5 /* CollectionViewTableViewCell.swift */; };
+		7B4114CE2A0576B600741DD5 /* HomeHeaderUIView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B4114CD2A0576B600741DD5 /* HomeHeaderUIView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -30,6 +32,8 @@
 		7B4114BF2A05659B00741DD5 /* UpcomingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpcomingViewController.swift; sourceTree = "<group>"; };
 		7B4114C12A0565AA00741DD5 /* SearchViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchViewController.swift; sourceTree = "<group>"; };
 		7B4114C32A0565B000741DD5 /* DownloadsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloadsViewController.swift; sourceTree = "<group>"; };
+		7B4114CB2A05725200741DD5 /* CollectionViewTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectionViewTableViewCell.swift; sourceTree = "<group>"; };
+		7B4114CD2A0576B600741DD5 /* HomeHeaderUIView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeHeaderUIView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -88,6 +92,8 @@
 			children = (
 				7B4114AC2A05640B00741DD5 /* MainTabbarViewController.swift */,
 				7B4114BC2A05658000741DD5 /* Controllers */,
+				7B4114CB2A05725200741DD5 /* CollectionViewTableViewCell.swift */,
+				7B4114CD2A0576B600741DD5 /* HomeHeaderUIView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -196,11 +202,13 @@
 			files = (
 				7B4114C22A0565AA00741DD5 /* SearchViewController.swift in Sources */,
 				7B4114AD2A05640B00741DD5 /* MainTabbarViewController.swift in Sources */,
+				7B4114CC2A05725200741DD5 /* CollectionViewTableViewCell.swift in Sources */,
 				7B4114C42A0565B000741DD5 /* DownloadsViewController.swift in Sources */,
 				7B4114A92A05640B00741DD5 /* AppDelegate.swift in Sources */,
 				7B4114AB2A05640B00741DD5 /* SceneDelegate.swift in Sources */,
 				7B4114C02A05659B00741DD5 /* UpcomingViewController.swift in Sources */,
 				7B4114BE2A05658D00741DD5 /* HomeViewController.swift in Sources */,
+				7B4114CE2A0576B600741DD5 /* HomeHeaderUIView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
