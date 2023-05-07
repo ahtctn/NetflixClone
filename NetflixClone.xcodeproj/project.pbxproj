@@ -18,6 +18,8 @@
 		7B4114C42A0565B000741DD5 /* DownloadsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B4114C32A0565B000741DD5 /* DownloadsViewController.swift */; };
 		7B4114CC2A05725200741DD5 /* CollectionViewTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B4114CB2A05725200741DD5 /* CollectionViewTableViewCell.swift */; };
 		7B4114CE2A0576B600741DD5 /* HomeHeaderUIView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B4114CD2A0576B600741DD5 /* HomeHeaderUIView.swift */; };
+		7BB59C892A07DE820096A28C /* APICaller.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BB59C882A07DE820096A28C /* APICaller.swift */; };
+		7BB59C8B2A07DEAE0096A28C /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BB59C8A2A07DEAE0096A28C /* Constants.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -34,6 +36,8 @@
 		7B4114C32A0565B000741DD5 /* DownloadsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloadsViewController.swift; sourceTree = "<group>"; };
 		7B4114CB2A05725200741DD5 /* CollectionViewTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectionViewTableViewCell.swift; sourceTree = "<group>"; };
 		7B4114CD2A0576B600741DD5 /* HomeHeaderUIView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeHeaderUIView.swift; sourceTree = "<group>"; };
+		7BB59C882A07DE820096A28C /* APICaller.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APICaller.swift; sourceTree = "<group>"; };
+		7BB59C8A2A07DEAE0096A28C /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -115,6 +119,8 @@
 		7B4114C92A0569D700741DD5 /* Managers */ = {
 			isa = PBXGroup;
 			children = (
+				7BB59C882A07DE820096A28C /* APICaller.swift */,
+				7BB59C8A2A07DEAE0096A28C /* Constants.swift */,
 			);
 			path = Managers;
 			sourceTree = "<group>";
@@ -201,8 +207,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				7B4114C22A0565AA00741DD5 /* SearchViewController.swift in Sources */,
+				7BB59C8B2A07DEAE0096A28C /* Constants.swift in Sources */,
 				7B4114AD2A05640B00741DD5 /* MainTabbarViewController.swift in Sources */,
 				7B4114CC2A05725200741DD5 /* CollectionViewTableViewCell.swift in Sources */,
+				7BB59C892A07DE820096A28C /* APICaller.swift in Sources */,
 				7B4114C42A0565B000741DD5 /* DownloadsViewController.swift in Sources */,
 				7B4114A92A05640B00741DD5 /* AppDelegate.swift in Sources */,
 				7B4114AB2A05640B00741DD5 /* SceneDelegate.swift in Sources */,

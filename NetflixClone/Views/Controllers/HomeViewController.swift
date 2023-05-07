@@ -23,6 +23,7 @@ class HomeViewController: UIViewController {
         view.backgroundColor = .systemBackground
         view.addSubview(homeFeedTable)
         self.delegations()
+        self.getTrendingMovies()
         
         
     }
@@ -49,9 +50,13 @@ class HomeViewController: UIViewController {
             UIBarButtonItem(image: UIImage(systemName: "person"), style: .done, target: self, action: nil),
             UIBarButtonItem(image: UIImage(systemName: "play.rectangle"), style: .done, target: self, action: nil),
         ]
-        
         navigationController?.navigationBar.tintColor = .white
-        
+    }
+    
+    private func getTrendingMovies() {
+        APICaller.shared.fetchMovies { result in
+            print(result.count)
+        }
     }
     
     
