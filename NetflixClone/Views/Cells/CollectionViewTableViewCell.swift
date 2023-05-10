@@ -12,6 +12,8 @@ class CollectionViewTableViewCell: UITableViewCell {
     //MARK: STATICS
     static let id: String = "CollectionViewTableViewCell"
     
+    private var movieTitles: [MovieModel] = [MovieModel]()
+    
     //MARK: UI ELEMENTS
     let collectionView: UICollectionView = {
         
@@ -19,7 +21,7 @@ class CollectionViewTableViewCell: UITableViewCell {
         layout.itemSize = CGSize(width: 140, height: 200)
         layout.scrollDirection = .horizontal
         let cv = UICollectionView(frame: .zero, collectionViewLayout: layout)
-        cv.register(UICollectionViewCell.self, forCellWithReuseIdentifier: "cell")
+        cv.register(TitleCollectionViewCell.self, forCellWithReuseIdentifier: TitleCollectionViewCell.id)
         return cv
     }()
     
@@ -42,16 +44,29 @@ class CollectionViewTableViewCell: UITableViewCell {
         super.layoutSubviews()
         collectionView.frame = contentView.bounds
     }
+    
+    public func configure(with movieTitles: [MovieModel]) {
+        self.movieTitles = movieTitles
+        
+        DispatchQueue.main.async { [weak self] in
+            self?.collectionView.reloadData()
+        }
+    }
 }
 
 extension CollectionViewTableViewCell: UICollectionViewDelegate, UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath)
-        cell.backgroundColor = .systemOrange
+        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: TitleCollectionViewCell.id, for: indexPath) as? TitleCollectionViewCell else {
+            return UICollectionViewCell()
+        }
+        
+        guard let model = movieTitles[indexPath.row].posterPath else { return UICollectionViewCell()}
+        
+        cell.configure(with: model)
         return cell
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 10
+        return movieTitles.count
     }
 }

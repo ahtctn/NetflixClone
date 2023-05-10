@@ -7,26 +7,211 @@
 
 import Foundation
 
+enum NetworkError: Error {
+    case invalidURL
+    case invalidData
+    case invalidDecoder
+    case invalidResponse
+}
+
+typealias HandlerMovie = (Result <[MovieModel], NetworkError>) -> Void
+typealias HandlerTV = (Result <[MovieModel], NetworkError>) -> Void
+typealias HandlerUpcoming = (Result <[MovieModel], NetworkError>) -> Void
+typealias HandlerPopular = (Result <[MovieModel], NetworkError>) -> Void
+typealias HandlerTopRated = (Result <[MovieModel], NetworkError>) -> Void
+
 class APICaller {
     static let shared = APICaller()
     
-    func fetchMovies(completion: @escaping(String) -> Void) {
+    func fetchMovies(completion: @escaping HandlerMovie) {
         
-        guard let url = URL(string: "\(Constants.baseURL)/3/trending/all/day?api_key=\(Constants.API_KEY)") else { return }
+        guard let url = URL(string: Constants.moviesURL) else {
+            completion(.failure(.invalidURL))
+            return
+        }
+        
         
         let task = URLSession.shared.dataTask(with: url) { data, response, error in
-            guard let data = data, error == nil else { return }
+            let jsonDecoder = JSONDecoder()
+            guard let data = data, error == nil else {
+                completion(.failure(.invalidData))
+                return
+            }
+            
+            guard let response = response as? HTTPURLResponse,
+                  200...299 ~= response.statusCode else {
+                print("fetch movies response error")
+                completion(.failure(.invalidResponse))
+                    return
+                }
             
             do {
-                let results = try JSONSerialization.jsonObject(with: data, options: .fragmentsAllowed)
-                print(results)
+                let results = try jsonDecoder.decode(TrendingMoviesResponse.self, from: data)
+                completion(.success(results.results)) 
             } catch {
-                print(error.localizedDescription)
+                completion(.failure(.invalidDecoder))
             }
         }
         
         task.resume()
+    }
+    
+    func fetchTVs(completion: @escaping HandlerTV) {
+        guard let url = URL(string: Constants.TVsURL) else {
+            completion(.failure(.invalidURL))
+            return
+        }
         
+        let task = URLSession.shared.dataTask(with: url) { data, response, error in
+            
+            guard let data = data, error == nil else {
+                completion(.failure(.invalidData))
+                return
+            }
+            
+            guard let response = response as? HTTPURLResponse,
+                  200...299 ~= response.statusCode else {
+                print("fetch tvs response error")
+                completion(.failure(.invalidResponse))
+                    return
+                }
+            
+            let decoder = JSONDecoder()
+            
+            do {
+                let results = try decoder.decode(TrendingMoviesResponse.self, from: data)
+                completion(.success(results.results))
+            } catch {
+                completion(.failure(.invalidDecoder))
+            }
+            
+            
+        }
+        task.resume()
+    }
+    
+    func fetchUpcomingMovies(completion: @escaping HandlerUpcoming) {
+        guard let url = URL(string: Constants.upcomingURL) else {
+            completion(.failure(.invalidURL))
+            return
+        }
         
+        let task = URLSession.shared.dataTask(with: url) { data, response, error in
+            guard let data = data, error == nil else {
+                completion(.failure(.invalidData))
+                return
+            }
+            
+            guard let response = response as? HTTPURLResponse,
+                  200...299 ~= response.statusCode else {
+                print("fetch upcoming movies response error")
+                completion(.failure(.invalidResponse))
+                    return
+                }
+            
+            let decoder = JSONDecoder()
+            
+            do {
+                let results = try decoder.decode(TrendingMoviesResponse.self, from: data)
+                completion(.success(results.results))
+            }catch let DecodingError.dataCorrupted(context) {
+                print(context)
+                print("Data corrupted")
+            } catch let DecodingError.keyNotFound(key, context) {
+                print("Key '\(key)' not found:", context.debugDescription)
+                print("codingPath:", context.codingPath)
+                print("Key not found")
+            } catch let DecodingError.valueNotFound(value, context) {
+                print("Value '\(value)' not found:", context.debugDescription)
+                print("codingPath:", context.codingPath)
+                print("Value not found")
+            } catch let DecodingError.typeMismatch(type, context)  {
+                print("Type '\(type)' mismatch:", context.debugDescription)
+                print("codingPath:", context.codingPath)
+                print("Type mismatch")
+            } catch {
+                completion(.failure(.invalidDecoder))
+            }
+        }
+        task.resume()
+        
+    }
+    
+    func fetchPopularMovies(completion: @escaping HandlerPopular) {
+        guard let url = URL(string: Constants.popularMoviesURL) else {
+            completion(.failure(.invalidURL))
+            return
+        }
+        
+        let task = URLSession.shared.dataTask(with: url) { data, response, error in
+            guard let data = data, error == nil else {
+                completion(.failure(.invalidData))
+                return
+            }
+            
+            guard let response = response as? HTTPURLResponse,
+                  200...299 ~= response.statusCode else {
+                print("fetch popular movies response error")
+                completion(.failure(.invalidResponse))
+                    return
+                }
+            
+            let decoder = JSONDecoder()
+            
+            do {
+                let results = try decoder.decode(TrendingMoviesResponse.self, from: data)
+                completion(.success(results.results))
+            } catch let DecodingError.dataCorrupted(context) {
+                print(context)
+                print("Data corrupted")
+            } catch let DecodingError.keyNotFound(key, context) {
+                print("Key '\(key)' not found:", context.debugDescription)
+                print("codingPath:", context.codingPath)
+                print("Key not found")
+            } catch let DecodingError.valueNotFound(value, context) {
+                print("Value '\(value)' not found:", context.debugDescription)
+                print("codingPath:", context.codingPath)
+                print("Value not found")
+            } catch let DecodingError.typeMismatch(type, context)  {
+                print("Type '\(type)' mismatch:", context.debugDescription)
+                print("codingPath:", context.codingPath)
+                print("Type mismatch")
+            } catch {
+                completion(.failure(.invalidDecoder))
+            }
+            
+        }
+        task.resume()
+    }
+    
+    func fetchTopRatedMovies(completion: @escaping HandlerTopRated) {
+        guard let url = URL(string: Constants.topRatedURL) else {
+            completion(.failure(.invalidURL))
+            return
+        }
+        
+        let task = URLSession.shared.dataTask(with: url) { data, response, error in
+            guard let data = data, error == nil else {
+                completion(.failure(.invalidData))
+                return
+            }
+            
+            guard let response = response as? HTTPURLResponse,
+                  200...299 ~= response.statusCode else {
+                print("fetch top rated movies response error")
+                completion(.failure(.invalidResponse))
+                    return
+                }
+            
+            let decoder = JSONDecoder()
+            
+            do {
+                let results = try decoder.decode(TrendingMoviesResponse.self, from: data)
+                completion(.success(results.results))
+            }catch {
+                completion(.failure(.invalidDecoder))
+            }
+        }
+        task.resume()
     }
 }
