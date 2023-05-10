@@ -19,6 +19,7 @@ typealias HandlerTV = (Result <[MovieModel], NetworkError>) -> Void
 typealias HandlerUpcoming = (Result <[MovieModel], NetworkError>) -> Void
 typealias HandlerPopular = (Result <[MovieModel], NetworkError>) -> Void
 typealias HandlerTopRated = (Result <[MovieModel], NetworkError>) -> Void
+typealias HandlerSearch = (Result <[MovieModel], NetworkError>) -> Void
 
 class APICaller {
     static let shared = APICaller()
@@ -186,6 +187,37 @@ class APICaller {
     
     func fetchTopRatedMovies(completion: @escaping HandlerTopRated) {
         guard let url = URL(string: Constants.topRatedURL) else {
+            completion(.failure(.invalidURL))
+            return
+        }
+        
+        let task = URLSession.shared.dataTask(with: url) { data, response, error in
+            guard let data = data, error == nil else {
+                completion(.failure(.invalidData))
+                return
+            }
+            
+            guard let response = response as? HTTPURLResponse,
+                  200...299 ~= response.statusCode else {
+                print("fetch top rated movies response error")
+                completion(.failure(.invalidResponse))
+                    return
+                }
+            
+            let decoder = JSONDecoder()
+            
+            do {
+                let results = try decoder.decode(TrendingMoviesResponse.self, from: data)
+                completion(.success(results.results))
+            }catch {
+                completion(.failure(.invalidDecoder))
+            }
+        }
+        task.resume()
+    }
+    
+    func getSearchMovies(completion: @escaping HandlerSearch) {
+        guard let url = URL(string: Constants.searchMoviesURL) else {
             completion(.failure(.invalidURL))
             return
         }

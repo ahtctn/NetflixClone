@@ -22,4 +22,6 @@ enum Constants {
     static let popularMoviesURL: String = "\(Constants.baseURL)/3/movie/popular?api_key=\(Constants.API_KEY)&language=en-US&page=1"
     
     static let topRatedURL: String = "\(Constants.baseURL)/3/movie/top_rated?api_key=\(Constants.API_KEY)&language=en-US&page=1"
+    
+    static let searchMoviesURL: String = "\(Constants.baseURL)/3/discover/movie?api_key=\(Constants.API_KEY)&language=en-US&sort_by=popularity.desc&include_video=false&page=1&with_watch_monetization_types=flatrate"
 }

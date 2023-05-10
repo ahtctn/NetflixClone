@@ -22,6 +22,7 @@ class TitleTableViewCell: UITableViewCell {
         let iv = UIImageView()
         iv.contentMode = .scaleAspectFit
         iv.translatesAutoresizingMaskIntoConstraints = false
+        iv.clipsToBounds = true
         return iv
     }()
     
