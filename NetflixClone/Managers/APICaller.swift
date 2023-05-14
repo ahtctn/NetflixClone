@@ -20,6 +20,7 @@ typealias HandlerUpcoming = (Result <[MovieModel], NetworkError>) -> Void
 typealias HandlerPopular = (Result <[MovieModel], NetworkError>) -> Void
 typealias HandlerTopRated = (Result <[MovieModel], NetworkError>) -> Void
 typealias HandlerSearch = (Result <[MovieModel], NetworkError>) -> Void
+typealias HandlerYTVideo = (Result <VideoElementModel, NetworkError>) -> Void
 
 class APICaller {
     static let shared = APICaller()
@@ -245,5 +246,69 @@ class APICaller {
             }
         }
         task.resume()
+    }
+    
+    func search(with query: String, completion: @escaping HandlerSearch) {
+        
+        guard let query = query.addingPercentEncoding(withAllowedCharacters: .urlHostAllowed) else { return }
+        
+        guard let url = URL(string: "\(Constants.searchFilterListingURL)\(query)") else {
+            completion(.failure(.invalidURL))
+            return
+        }
+        
+        let task = URLSession.shared.dataTask(with: url) { data, response, error in
+            guard let data = data, error == nil else {
+                completion(.failure(.invalidData))
+                return
+            }
+            
+            guard let response = response as? HTTPURLResponse,
+                  200...299 ~= response.statusCode else {
+                print("fetch top rated movies response error")
+                completion(.failure(.invalidResponse))
+                    return
+                }
+            
+            let decoder = JSONDecoder()
+            
+            do {
+                let results = try decoder.decode(TrendingMoviesResponse.self, from: data)
+                completion(.success(results.results))
+            }catch {
+                completion(.failure(.invalidDecoder))
+            }
+        }
+        task.resume()
+    }
+    
+    func openMovieTrailersInYT(with query: String, completion: @escaping HandlerYTVideo) {
+        guard let query = query.addingPercentEncoding(withAllowedCharacters: .urlHostAllowed) else { return }
+        guard let url = URL(string: "\(Constants.youtubeBaseURL)q=\(query)&key=\(Constants.youtubeAPI_KEY)") else { return }
+        
+        let task = URLSession.shared.dataTask(with: url) { data, response, error in
+            guard let data = data, error == nil else {
+                completion(.failure(.invalidData))
+                return
+            }
+            
+            guard let response = response as? HTTPURLResponse,
+                  200...299 ~= response.statusCode else {
+                completion(.failure(.invalidResponse))
+                return
+            }
+            
+            let decoder = JSONDecoder()
+            
+            do {
+                let results = try decoder.decode(YoutubeSearchResultsModel.self, from: data)
+                completion(.success(results.items[0]))
+                
+            } catch {
+                print(error.localizedDescription)
+                completion(.failure(.invalidDecoder))
+            } 
+        }
+        task.resume() 
     }
 }

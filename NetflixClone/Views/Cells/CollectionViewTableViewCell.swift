@@ -7,10 +7,15 @@
 
 import UIKit
 
+protocol CollectionTableViewCellDelegate: AnyObject {
+    func collectionTableViewCellDidTapCell(_ cell: CollectionViewTableViewCell, viewModel: MoviePreviewViewModel)
+}
+
 class CollectionViewTableViewCell: UITableViewCell {
 
     //MARK: STATICS
     static let id: String = "CollectionViewTableViewCell"
+    weak var delegate: CollectionTableViewCellDelegate?
     
     private var movieTitles: [MovieModel] = [MovieModel]()
     
@@ -68,5 +73,29 @@ extension CollectionViewTableViewCell: UICollectionViewDelegate, UICollectionVie
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return movieTitles.count
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        
+        collectionView.deselectItem(at: indexPath, animated: true)
+        
+        let movie = movieTitles[indexPath.row]
+        guard let movieName = movie.originalTitle ?? movie.originalName else { return }
+        APICaller.shared.openMovieTrailersInYT(with: movieName + " Trailer") {[weak self] result in
+            switch result {
+            case .success(let videoElement):
+                let movieTitles = self?.movieTitles[indexPath.row]
+                
+                guard let movieTitleOverview = movieTitles?.overview else { return }
+                
+                guard let strongSelf = self else { return }
+                
+                let viewModel = MoviePreviewViewModel(title: movieName, youtubeView: videoElement, titleOverview: movieTitleOverview)
+                self?.delegate?.collectionTableViewCellDidTapCell(strongSelf, viewModel: viewModel)
+                
+            case .failure(let error):
+                print(error.localizedDescription)
+            }
+        }
     }
 }

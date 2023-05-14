@@ -16,6 +16,10 @@ enum MovieSections: Int {
 }
 
 class HomeViewController: UIViewController {
+    
+    private var randomTrendingMovies: MovieModel?
+    private var headerView: HomeHeaderUIView?
+    
 
     let sectionTitles: [String] = ["Trending Movies","Trending TV", "Popular Now", "Upcoming Movies", "Top Rated"]
     
@@ -43,8 +47,9 @@ class HomeViewController: UIViewController {
         homeFeedTable.dataSource = self
         self.configureNavBar()
         
-        let header = HomeHeaderUIView(frame: CGRect(x: 0, y: 0, width: view.bounds.width, height: 450))
-        homeFeedTable.tableHeaderView = header
+        headerView = HomeHeaderUIView(frame: CGRect(x: 0, y: 0, width: view.bounds.width, height: 450))
+        homeFeedTable.tableHeaderView = headerView
+        self.configureHeroHeaderView()
     }
     
     private func configureNavBar() {
@@ -56,6 +61,17 @@ class HomeViewController: UIViewController {
             UIBarButtonItem(image: UIImage(systemName: "play.rectangle"), style: .done, target: self, action: nil),
         ]
         navigationController?.navigationBar.tintColor = .white
+    }
+    
+    private func configureHeroHeaderView() {
+        APICaller.shared.fetchPopularMovies { [weak self] result in
+            switch result {
+            case .success(let movies):
+                self?.randomTrendingMovies = movies.randomElement()
+            case .failure(let error):
+                print(error.localizedDescription)
+            }
+        }
     }
 }
 
@@ -71,6 +87,8 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: CollectionViewTableViewCell.id, for: indexPath) as? CollectionViewTableViewCell else { return UITableViewCell()}
+        cell.delegate = self
+        
         switch indexPath.section {
         case MovieSections.TrendingMovies.rawValue:
             APICaller.shared.fetchMovies { result in
@@ -154,5 +172,15 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
         let offset = scrollView.contentOffset.y + defaultOffset
         
         navigationController?.navigationBar.transform = .init(translationX: 0, y: min(0, -offset))
+    }
+}
+
+extension HomeViewController: CollectionTableViewCellDelegate {
+    func collectionTableViewCellDidTapCell(_ cell: CollectionViewTableViewCell, viewModel: MoviePreviewViewModel) {
+        DispatchQueue.main.async { [weak self] in
+            let vc = MoviePreviewViewController()
+            vc.configure(with: viewModel)
+            self?.navigationController?.pushViewController(vc, animated: true)
+        }
     }
 }
